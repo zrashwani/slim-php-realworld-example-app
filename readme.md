@@ -388,4 +388,3 @@ For more information check Slim documentations:
 
 # Test
 `composer test`
->>>>>>> c826cb831e2de6292f1feb5a1ba3584221f40795
