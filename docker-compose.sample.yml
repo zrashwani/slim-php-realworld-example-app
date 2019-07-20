@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+    slim:
+        build:
+            dockerfile: ./docker/php.docker
+            context: .
+        working_dir: /var/www
+        command: > 
+          sh -c  "php composer.phar refresh-database && php -S 0.0.0.0:8080 -t public public/index.php"
+        environment:
+            docker: "true"
+        restart: always    
+        ports:
+            - 8080:8080
+        volumes:
+            - .:/var/www
+            - logs:/var/www/logs
+        networks: 
+            - slim_network
+        depends_on:
+            - mysql    
+    mysql:
+        container_name: helloworld_mysql
+        build:
+            dockerfile: ./docker/mysql.docker
+            context: . 
+        command: mysqld --default-authentication-plugin=mysql_native_password         
+        volumes:
+            - mysql_slim_data:/var/lib/mysql
+        networks: 
+            - slim_network    
+
+networks: 
+    slim_network:
+        driver: bridge
+
+volumes: 
+    mysql_slim_data:
+    logs:          
